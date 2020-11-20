@@ -1,7 +1,9 @@
 package com.github.mgljava.test;
 
 
+import com.github.mgljava.dao.PeopleDao;
 import com.github.mgljava.dao.UserDao;
+import com.github.mgljava.domain.People;
 import com.github.mgljava.domain.User;
 import java.io.InputStream;
 import java.util.List;
@@ -25,6 +27,7 @@ public class MainTest {
 
     // 使用SqlSession创建Dao接口的代理对象
     UserDao mapper = session.getMapper(UserDao.class);
+    PeopleDao peopleDao = session.getMapper(PeopleDao.class);
 
     // 使用代理对象执行方法
     List<User> all = mapper.findAll();
@@ -34,6 +37,9 @@ public class MainTest {
     User userById = mapper.findUserById(3L);
     System.out.println(userById);
 
+    System.out.println("-------people-------");
+    List<People> all1 = peopleDao.findAll();
+    System.out.println(all1);
     // 释放资源
     session.close();
     inputStream.close();

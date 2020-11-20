@@ -11,6 +11,15 @@
         <!-- 设置默认分隔符 -->
         <property name="org.apache.ibatis.parsing.PropertyParser.default-value-separator" value="?:"/>
     </properties>
+
+    <settings>
+        <setting name="defaultFetchSize" value="1"/>
+    </settings>
+    
+    <typeAliases>
+        <package name="com.github.mgljava.domain"/>
+    </typeAliases>
+
     <!-- 配置环境 -->
     <environments default="mysql">
         <!-- 配置mysql环境 -->
@@ -32,5 +41,6 @@
     <!-- 指定映射配置建的位置，每个dao独立的位置文件 -->
     <mappers>
         <mapper resource="com/github/mgljava/dao/UserDao.xml"/>
+        <mapper resource="com/github/mgljava/dao/PeopleDao.xml"/>
     </mappers>
 </configuration>
