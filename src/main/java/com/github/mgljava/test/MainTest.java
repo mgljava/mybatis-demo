@@ -1,4 +1,4 @@
-package com.github.mgljava;
+package com.github.mgljava.test;
 
 
 import com.github.mgljava.dao.UserDao;
@@ -29,6 +29,10 @@ public class MainTest {
     // 使用代理对象执行方法
     List<User> all = mapper.findAll();
     all.forEach(System.out::println);
+
+    System.out.println("-------------------");
+    User userById = mapper.findUserById(3L);
+    System.out.println(userById);
 
     // 释放资源
     session.close();

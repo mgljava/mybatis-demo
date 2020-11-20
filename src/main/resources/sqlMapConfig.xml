@@ -4,6 +4,13 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <!-- MyBatis的主配置文件 -->
 <configuration>
+
+    <properties resource="config.properties">
+        <!-- 启用默认值特性 -->
+        <property name="org.apache.ibatis.parsing.PropertyParser.enable-default-value" value="true"/>
+        <!-- 设置默认分隔符 -->
+        <property name="org.apache.ibatis.parsing.PropertyParser.default-value-separator" value="?:"/>
+    </properties>
     <!-- 配置环境 -->
     <environments default="mysql">
         <!-- 配置mysql环境 -->
@@ -12,16 +19,18 @@
             <transactionManager type="JDBC"/>
             <!-- 配置数据源（连接池） -->
             <dataSource type="POOLED">
-                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
-                <property name="url" value="jdbc:mysql://localhost:3306/mybatis_demo"/>
-                <property name="username" value="root"/>
-                <property name="password" value="123456"/>
+                <property name="driver" value="${driver}"/>
+                <property name="url" value="${url}"/>
+                <!-- 如果属性 'username' 没有被配置，'username' 属性的值将为 'root' 从MyBatis 3.4.2 开始，并配合启动默认属性 -->
+                <property name="username" value="${username?:root}"/>
+                <!-- 设置特定的属性来修改分隔属性名和默认值的字符 -->
+                <property name="password" value="${password?:root}"/>
             </dataSource>
         </environment>
     </environments>
 
     <!-- 指定映射配置建的位置，每个dao独立的位置文件 -->
     <mappers>
-        <mapper resource="UserDao.xml"/>
+        <mapper resource="com/github/mgljava/dao/UserDao.xml"/>
     </mappers>
 </configuration>
