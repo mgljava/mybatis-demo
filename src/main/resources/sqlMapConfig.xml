@@ -24,9 +24,13 @@
     <environments default="mysql">
         <!-- 配置mysql环境 -->
         <environment id="mysql">
-            <!-- 配置事务的类型 -->
+            <!-- 配置事务的类型:这个配置直接使用了 JDBC 的提交和回滚设施，它依赖从数据源获得的连接来管理事务作用域 -->
             <transactionManager type="JDBC"/>
-            <!-- 配置数据源（连接池） -->
+            <!-- 配置数据源（连接池）[UNPOOLED|POOLED|JNDI]
+                UNPOOLED: 这个数据源的实现会每次请求时打开和关闭连接
+                POOLED: 这种数据源的实现利用“池”的概念将 JDBC 连接对象组织起来，避免了创建新的连接实例时所必需的初始化和认证时间
+                JNDI: 这个数据源实现是为了能在如 EJB 或应用服务器这类容器中使用，容器可以集中或在外部配置数据源，然后放置一个 JNDI 上下文的数据源引用
+            -->
             <dataSource type="POOLED">
                 <property name="driver" value="${driver}"/>
                 <property name="url" value="${url}"/>
@@ -34,13 +38,30 @@
                 <property name="username" value="${username?:root}"/>
                 <!-- 设置特定的属性来修改分隔属性名和默认值的字符 -->
                 <property name="password" value="${password?:root}"/>
+                <property name="poolMaximumActiveConnections" value="10"/>
+                <property name="poolPingEnabled" value="true"/> <!-- 是否启用侦测查询。若开启，需要设置 poolPingQuery 属性为一个可执行的 SQL 语句 -->
+                <property name="poolPingQuery" value="SELECT 1 = 1;"/> <!-- 发送到数据库的侦测查询，用来检验连接是否正常工作并准备接受请求 -->
+            </dataSource>
+        </environment>
+        <environment id="mysql-uat">
+            <!-- MANAGED:它从不提交或回滚一个连接，而是让容器来管理事务的整个生命周期（比如 JEE 应用服务器的上下文）。
+             默认情况下它会关闭连接。然而一些容器并不希望连接被关闭，因此需要将 closeConnection 属性设置为 false 来阻止默认的关闭行为 -->
+            <transactionManager type="MANAGED">
+                <property name="closeConnection" value="false"/>
+            </transactionManager>
+            <dataSource type="POOLED">
+                <property name="driver" value="${driver}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${username?:root}"/>
+                <property name="password" value="${password?:root}"/>
             </dataSource>
         </environment>
     </environments>
 
     <!-- 指定映射配置建的位置，每个dao独立的位置文件 -->
     <mappers>
-        <mapper resource="com/github/mgljava/dao/UserDao.xml"/>
-        <mapper resource="com/github/mgljava/dao/PeopleDao.xml"/>
+        <mapper resource="com/github/mgljava/dao/UserDao.xml"/> <!-- 使用相对于类路径的资源引用 -->
+        <mapper class="com.github.mgljava.dao.PeopleDao"/> <!-- 使用映射器接口实现类的完全限定类名 -->
+        <!--  <package name="com.github.mgljava.dao"/> 将包内的映射器接口实现全部注册为映射器 -->
     </mappers>
 </configuration>
