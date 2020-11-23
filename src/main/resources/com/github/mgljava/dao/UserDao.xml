@@ -6,4 +6,8 @@
     <select id="findAll" resultType="com.github.mgljava.domain.User">
         SELECT * FROM user;
     </select>
+
+    <select id="findById" parameterType="long" resultType="com.github.mgljava.domain.User">
+        SELECT * FROM user WHERE id = #{id}
+    </select>
 </mapper>

@@ -30,16 +30,23 @@ public class MainTest {
     PeopleDao peopleDao = session.getMapper(PeopleDao.class);
 
     // 使用代理对象执行方法
-    List<User> all = mapper.findAll();
-    all.forEach(System.out::println);
+//    List<User> all = mapper.findAll();
+//    all.forEach(System.out::println);
 
-    System.out.println("-------------------");
-    User userById = mapper.findUserById(3L);
-    System.out.println(userById);
+    System.out.println("--------findUserById-----------");
+//    User userById = mapper.findUserById(3L);
+//    System.out.println(userById);
 
-    System.out.println("-------people-------");
+    System.out.println("--------findById-----------");
+//    User user = mapper.findById(2L);
+//    System.out.println(user);
+
+    System.out.println("--------updateById-----------");
+    mapper.updateById(1L, "新地址");
+
+    /*System.out.println("-------people-------");
     List<People> all1 = peopleDao.findAll();
-    System.out.println(all1);
+    System.out.println(all1);*/
     // 释放资源
     session.close();
     inputStream.close();
